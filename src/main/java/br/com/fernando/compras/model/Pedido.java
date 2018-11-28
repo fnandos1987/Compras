@@ -32,6 +32,6 @@ public class Pedido {
     @Temporal(javax.persistence.TemporalType.DATE)
     Date dataCriacao;
     
-    Cliente cliente;
+    Long clienteId;
     
 }

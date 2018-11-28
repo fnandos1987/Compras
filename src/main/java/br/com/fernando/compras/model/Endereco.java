@@ -29,5 +29,5 @@ public class Endereco {
     String cidade;
     String estado;
     Integer cep;    
-    Cliente cliente;
+    Long clienteId;
 }

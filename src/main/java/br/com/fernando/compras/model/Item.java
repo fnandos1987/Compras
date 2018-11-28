@@ -27,7 +27,7 @@ public class Item {
     Long itemId;
     Integer quantidade;
     Double total;    
-    Pedido pedido;    
-    Produto produto;
+    Long numero;    
+    Long produtoId;
     
 }
