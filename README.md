@@ -1,3 +1,3 @@
 # Compras
 
-Aplicação rest usando Spring Boot 2.1.0
+Aplicação rest usando Spring Boot 1.5.3
