@@ -6,6 +6,7 @@
 package br.com.fernando.compras.repository;
 
 import br.com.fernando.compras.model.Produto;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,5 +19,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByNomeContaining(String nome);
     
     List<Produto> findByMarca(String marca);
+    
+    List<Produto> findByDataFabricao(Date data);   
     
 }

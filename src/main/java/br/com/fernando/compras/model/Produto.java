@@ -5,11 +5,12 @@
  */
 package br.com.fernando.compras.model;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,6 @@ public class Produto {
     String descricao;
     String marca;
     Double valor;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    Date dataFabricacao;
 }

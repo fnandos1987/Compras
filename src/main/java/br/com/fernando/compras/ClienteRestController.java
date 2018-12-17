@@ -18,6 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,31 @@ public class ClienteRestController {
             return new ResponseEntity<>(assembler.toResource(cliente), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    @GetMapping("/rua/{rua}")
+    public ResponseEntity<List<ClienteResource>> findByRua(@PathVariable String rua) {
+        return new ResponseEntity<>(assembler.toResources(repository.findByRua(rua)), HttpStatus.OK);
+    }
+
+    @GetMapping("/cidade/{cidade}")
+    public ResponseEntity<List<ClienteResource>> findByCidade(@PathVariable String cidade) {
+        return new ResponseEntity<>(assembler.toResources(repository.findByCidade(cidade)), HttpStatus.OK);
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<ClienteResource>> findByEsatdo(@PathVariable String estado) {
+        return new ResponseEntity<>(assembler.toResources(repository.findByEstado(estado)), HttpStatus.OK);
+    }
+    
+    @PostMapping
+    public ResponseEntity<ClienteResource> create(@RequestBody Cliente cliente) {
+        cliente = repository.save(cliente);
+        if (cliente != null) {
+            return new ResponseEntity<>(assembler.toResource(cliente), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
     
