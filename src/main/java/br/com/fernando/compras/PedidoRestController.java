@@ -5,19 +5,22 @@
  */
 package br.com.fernando.compras;
 
+import br.com.fernando.compras.model.Item;
 import br.com.fernando.compras.model.Pedido;
+import br.com.fernando.compras.repository.ItemRepository;
 import br.com.fernando.compras.repository.PedidoRepository;
 import br.com.fernando.compras.resource.PedidoResource;
 import br.com.fernando.compras.resource.PedidoResourceAssembler;
 import java.util.List;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +36,9 @@ public class PedidoRestController {
     
     @Autowired
     PedidoRepository repository;
+    
+    @Autowired
+    ItemRepository itemRepository;
     
     PedidoResourceAssembler assembler = new PedidoResourceAssembler();
     
@@ -51,6 +57,24 @@ public class PedidoRestController {
         }
     }
     
+    @PostMapping
+    public ResponseEntity<PedidoResource> create(@RequestBody Pedido pedido) {
+        pedido = repository.save(pedido);
+        if (pedido != null) {
+            createItens(pedido);
+            return new ResponseEntity<>(assembler.toResource(pedido), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+    
+    private void createItens(Pedido pedido) {
+        for (Item item: pedido.getItens()) {
+            item.setPedido(pedido);
+            itemRepository.save(item);
+        }      
+    }
+    
     @PutMapping("/{numero}")
     public ResponseEntity<PedidoResource> update(@PathVariable Long numero, @RequestBody Pedido pedido) {
         if (pedido != null) {
@@ -62,7 +86,6 @@ public class PedidoRestController {
         }
     }
 
-    @Secured("ROLE_MANAGER")
     @DeleteMapping("/{numero}")
     public ResponseEntity<PedidoResource> delete(@PathVariable Long numero) {
         Pedido pedido = repository.findOne(numero);

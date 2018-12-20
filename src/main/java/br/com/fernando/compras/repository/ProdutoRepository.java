@@ -20,6 +20,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     
     List<Produto> findByMarca(String marca);
     
-    List<Produto> findByDataFabricao(Date data);   
+    List<Produto> findByDataFabricacao(Date data);   
     
 }
