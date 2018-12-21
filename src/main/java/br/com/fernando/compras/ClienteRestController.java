@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,12 +39,14 @@ public class ClienteRestController {
 
     ClienteResourceAssembler assembler = new ClienteResourceAssembler();
     
+    @Secured("ROLE_USER")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ApiOperation(value = "retorna todos os clientes")
     public ResponseEntity<List<ClienteResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
     
+    @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @ApiOperation(value = "retorna um cliente conforme o id informado")
     @ApiParam(value = "id", required = true)
@@ -56,6 +59,7 @@ public class ClienteRestController {
         }
     }
     
+    @Secured("ROLE_USER")
     @GetMapping("/rua/{rua}")
     @ApiOperation(value = "retorna um cliente conforme a rua do endereço vinculado a ele")
     @ApiParam(value = "rua", required = true)
@@ -63,6 +67,7 @@ public class ClienteRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByRua(rua)), HttpStatus.OK);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/cidade/{cidade}")
     @ApiOperation(value = "retorna um cliente conforme a cidade do endereço vinculado a ele")
     @ApiParam(value = "cidade", required = true)
@@ -70,6 +75,7 @@ public class ClienteRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByCidade(cidade)), HttpStatus.OK);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/estado/{estado}")
     @ApiOperation(value = "retorna um cliente conforme o estado do endereço vinculado a ele")
     @ApiParam(value = "estado", required = true)
@@ -77,6 +83,7 @@ public class ClienteRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByEstado(estado)), HttpStatus.OK);
     }
     
+    @Secured("ROLE_MANAGER")
     @PostMapping
     @ApiOperation(value = "Cria um novo cliente")
     @ApiParam(value = "cliente", required = true)
@@ -89,6 +96,7 @@ public class ClienteRestController {
         }
     }
     
+    @Secured("ROLE_MANAGER")
     @PutMapping("/{id}")
     @ApiOperation(value = "Atualiza um cliente")    
     public ResponseEntity<ClienteResource> update(@ApiParam(value = "id", required = true) @PathVariable Long id, 
@@ -102,6 +110,7 @@ public class ClienteRestController {
         }
     }
 
+    @Secured("ROLE_MANAGER")
     @DeleteMapping("/{id}")
     @ApiOperation(value = "exclui um cliente")
     @ApiParam(value = "id", required = true)

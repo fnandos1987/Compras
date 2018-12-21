@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,12 +39,14 @@ public class EnderecoRestController {
     
     EnderecoResourceAssembler assembler = new EnderecoResourceAssembler();
     
+    @Secured("ROLE_USER")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ApiOperation(value = "retorna todos os endereços")
     public ResponseEntity<List<EnderecoResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
     
+    @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @ApiOperation(value = "retorna um endereço conforme o id informado")
     @ApiParam(value = "id", required = true)
@@ -56,6 +59,7 @@ public class EnderecoRestController {
         }
     }
     
+    @Secured("ROLE_MANAGER")
     @PostMapping
     @ApiOperation(value = "cria um novo endereço")
     @ApiParam(value = "endereco", required = true)
@@ -68,6 +72,7 @@ public class EnderecoRestController {
         }
     }
     
+    @Secured("ROLE_MANAGER")
     @PutMapping("/{id}")
     @ApiOperation(value = "altera um endereço")    
     public ResponseEntity<EnderecoResource> update(@ApiParam(value = "id", required = true) @PathVariable Long id, 
@@ -81,6 +86,7 @@ public class EnderecoRestController {
         }
     }
 
+    @Secured("ROLE_MANAGER")
     @DeleteMapping("/{id}")
     @ApiOperation(value = "exclui um endereço")
     @ApiParam(value = "id", required = true)

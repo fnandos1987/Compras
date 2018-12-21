@@ -14,11 +14,11 @@ import br.com.fernando.compras.resource.PedidoResourceAssembler;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
-import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,12 +44,14 @@ public class PedidoRestController {
     
     PedidoResourceAssembler assembler = new PedidoResourceAssembler();
     
+    @Secured("ROLE_USER")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ApiOperation(value = "retorna todos os pedidos")
     public ResponseEntity<List<PedidoResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
     
+    @Secured("ROLE_USER")
     @GetMapping("/{numero}")
     @ApiOperation(value = "retorna um pedido conforme o número informado")
     @ApiParam(value = "numero", required = true)
@@ -62,6 +64,7 @@ public class PedidoRestController {
         }
     }
     
+    @Secured("ROLE_USER")
     @PostMapping
     @ApiOperation(value = "Cria um novo pedido com seus respectivos itens")
     @ApiParam(value = "pedido", required = true)
@@ -82,6 +85,7 @@ public class PedidoRestController {
         }      
     }
     
+    @Secured("ROLE_USER")
     @PutMapping("/{numero}")
     @ApiOperation(value = "Cria um pedido")
     public ResponseEntity<PedidoResource> update(@ApiParam(value = "numero", required = true) @PathVariable Long numero, 
@@ -95,6 +99,7 @@ public class PedidoRestController {
         }
     }
 
+    @Secured("ROLE_MANAGER")
     @DeleteMapping("/{numero}")
     @ApiOperation(value = "exclui um pedido")
     @ApiParam(value = "pedido", required = true)

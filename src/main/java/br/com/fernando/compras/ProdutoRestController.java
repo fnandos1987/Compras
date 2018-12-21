@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,12 +43,14 @@ public class ProdutoRestController {
 
     ProdutoResourceAssembler assembler = new ProdutoResourceAssembler();
 
+    @Secured("ROLE_USER")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ApiOperation(value = "retorna todos os produtos")
     public ResponseEntity<List<ProdutoResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @ApiOperation(value = "retorna um produto conforme o id informado")
     @ApiParam(value = "id", required = true)
@@ -60,6 +63,7 @@ public class ProdutoRestController {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/nome/{nome}")
     @ApiOperation(value = "retorna um produto conforme o nome")
     @ApiParam(value = "nome", required = true)
@@ -67,6 +71,7 @@ public class ProdutoRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByNomeContaining(nome)), HttpStatus.OK);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/marca/{marca}")
     @ApiOperation(value = "retorna um produto conforme a marca")
     @ApiParam(value = "marca", required = true)
@@ -74,6 +79,7 @@ public class ProdutoRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByMarca(marca)), HttpStatus.OK);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/data/{data}")
     @ApiOperation(value = "retorna um produto conforme o data informada", notes = "informar a data no formato aaaa-MM-dd")
     @ApiParam(value = "data", required = true)
@@ -84,6 +90,7 @@ public class ProdutoRestController {
         return new ResponseEntity<>(assembler.toResources(repository.findByDataFabricacao(date)), HttpStatus.OK);
     }
 
+    @Secured("ROLE_MANAGER")
     @PostMapping
     @ApiOperation(value = "cria um novo produto")
     @ApiParam(value = "produto", required = true)
@@ -96,6 +103,7 @@ public class ProdutoRestController {
         }
     }
 
+    @Secured("ROLE_MANAGER")
     @PutMapping("/{id}")
     @ApiOperation(value = "altera um produto")
     public ResponseEntity<ProdutoResource> update(@ApiParam(value = "id", required = true) @PathVariable Long id, 
@@ -109,6 +117,7 @@ public class ProdutoRestController {
         }
     }
 
+    @Secured("ROLE_MANAGER")
     @DeleteMapping("/{id}")
     @ApiOperation(value = "exclui um produto")
     @ApiParam(value = "id", required = true)

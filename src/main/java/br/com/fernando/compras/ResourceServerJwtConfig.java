@@ -7,6 +7,7 @@ package br.com.fernando.compras;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
  *
  * @author fernando.schwambach
  */
+@Configuration
 public class ResourceServerJwtConfig {
     
     @Autowired
