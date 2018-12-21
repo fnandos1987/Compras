@@ -9,6 +9,8 @@ import br.com.fernando.compras.repository.ClienteRepository;
 import br.com.fernando.compras.resource.ClienteResourceAssembler;
 import br.com.fernando.compras.resource.ClienteResource;
 import br.com.fernando.compras.model.Cliente;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,11 +39,14 @@ public class ClienteRestController {
     ClienteResourceAssembler assembler = new ClienteResourceAssembler();
     
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @ApiOperation(value = "retorna todos os clientes")
     public ResponseEntity<List<ClienteResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
     
     @GetMapping("/{id}")
+    @ApiOperation(value = "retorna um cliente conforme o id informado")
+    @ApiParam(value = "id", required = true)
     public ResponseEntity<ClienteResource> get(@PathVariable Long id) {
         Cliente cliente = repository.findOne(id);
         if (cliente != null) {
@@ -52,21 +57,29 @@ public class ClienteRestController {
     }
     
     @GetMapping("/rua/{rua}")
+    @ApiOperation(value = "retorna um cliente conforme a rua do endereço vinculado a ele")
+    @ApiParam(value = "rua", required = true)
     public ResponseEntity<List<ClienteResource>> findByRua(@PathVariable String rua) {
         return new ResponseEntity<>(assembler.toResources(repository.findByRua(rua)), HttpStatus.OK);
     }
 
     @GetMapping("/cidade/{cidade}")
+    @ApiOperation(value = "retorna um cliente conforme a cidade do endereço vinculado a ele")
+    @ApiParam(value = "cidade", required = true)
     public ResponseEntity<List<ClienteResource>> findByCidade(@PathVariable String cidade) {
         return new ResponseEntity<>(assembler.toResources(repository.findByCidade(cidade)), HttpStatus.OK);
     }
 
     @GetMapping("/estado/{estado}")
+    @ApiOperation(value = "retorna um cliente conforme o estado do endereço vinculado a ele")
+    @ApiParam(value = "estado", required = true)
     public ResponseEntity<List<ClienteResource>> findByEsatdo(@PathVariable String estado) {
         return new ResponseEntity<>(assembler.toResources(repository.findByEstado(estado)), HttpStatus.OK);
     }
     
     @PostMapping
+    @ApiOperation(value = "Cria um novo cliente")
+    @ApiParam(value = "cliente", required = true)
     public ResponseEntity<ClienteResource> create(@RequestBody Cliente cliente) {
         cliente = repository.save(cliente);
         if (cliente != null) {
@@ -77,7 +90,9 @@ public class ClienteRestController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteResource> update(@PathVariable Long id, @RequestBody Cliente cliente) {
+    @ApiOperation(value = "Atualiza um cliente")    
+    public ResponseEntity<ClienteResource> update(@ApiParam(value = "id", required = true) @PathVariable Long id, 
+                                                  @ApiParam(value = "cliente", required = true) @RequestBody Cliente cliente) {
         if (cliente != null) {
             cliente.setClienteId(id);
             cliente = repository.save(cliente);
@@ -88,6 +103,8 @@ public class ClienteRestController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "exclui um cliente")
+    @ApiParam(value = "id", required = true)
     public ResponseEntity<ClienteResource> delete(@PathVariable Long id) {
         Cliente cliente = repository.findOne(id);
         if (cliente != null) {

@@ -11,6 +11,8 @@ import br.com.fernando.compras.repository.ItemRepository;
 import br.com.fernando.compras.repository.PedidoRepository;
 import br.com.fernando.compras.resource.PedidoResource;
 import br.com.fernando.compras.resource.PedidoResourceAssembler;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +45,14 @@ public class PedidoRestController {
     PedidoResourceAssembler assembler = new PedidoResourceAssembler();
     
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @ApiOperation(value = "retorna todos os pedidos")
     public ResponseEntity<List<PedidoResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
     
     @GetMapping("/{numero}")
+    @ApiOperation(value = "retorna um pedido conforme o número informado")
+    @ApiParam(value = "numero", required = true)
     public ResponseEntity<PedidoResource> get(@PathVariable Long numero) {
         Pedido pedido = repository.findOne(numero);
         if (pedido != null) {
@@ -58,6 +63,8 @@ public class PedidoRestController {
     }
     
     @PostMapping
+    @ApiOperation(value = "Cria um novo pedido com seus respectivos itens")
+    @ApiParam(value = "pedido", required = true)
     public ResponseEntity<PedidoResource> create(@RequestBody Pedido pedido) {
         pedido = repository.save(pedido);
         if (pedido != null) {
@@ -76,7 +83,9 @@ public class PedidoRestController {
     }
     
     @PutMapping("/{numero}")
-    public ResponseEntity<PedidoResource> update(@PathVariable Long numero, @RequestBody Pedido pedido) {
+    @ApiOperation(value = "Cria um pedido")
+    public ResponseEntity<PedidoResource> update(@ApiParam(value = "numero", required = true) @PathVariable Long numero, 
+                                                 @ApiParam(value = "pedido", required = true) @RequestBody Pedido pedido) {
         if (pedido != null) {
             pedido.setNumero(numero);
             pedido = repository.save(pedido);
@@ -87,6 +96,8 @@ public class PedidoRestController {
     }
 
     @DeleteMapping("/{numero}")
+    @ApiOperation(value = "exclui um pedido")
+    @ApiParam(value = "pedido", required = true)
     public ResponseEntity<PedidoResource> delete(@PathVariable Long numero) {
         Pedido pedido = repository.findOne(numero);
         if (pedido != null) {

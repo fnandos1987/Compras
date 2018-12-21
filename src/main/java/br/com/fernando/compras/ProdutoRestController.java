@@ -9,6 +9,8 @@ import br.com.fernando.compras.model.Produto;
 import br.com.fernando.compras.repository.ProdutoRepository;
 import br.com.fernando.compras.resource.ProdutoResource;
 import br.com.fernando.compras.resource.ProdutoResourceAssembler;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,11 +43,14 @@ public class ProdutoRestController {
     ProdutoResourceAssembler assembler = new ProdutoResourceAssembler();
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @ApiOperation(value = "retorna todos os produtos")
     public ResponseEntity<List<ProdutoResource>> getAll() {
         return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "retorna um produto conforme o id informado")
+    @ApiParam(value = "id", required = true)
     public ResponseEntity<ProdutoResource> get(@PathVariable Long id) {
         Produto produto = repository.findOne(id);
         if (produto != null) {
@@ -56,16 +61,22 @@ public class ProdutoRestController {
     }
 
     @GetMapping("/nome/{nome}")
+    @ApiOperation(value = "retorna um produto conforme o nome")
+    @ApiParam(value = "nome", required = true)
     public ResponseEntity<List<ProdutoResource>> findByNome(@PathVariable String nome) {
         return new ResponseEntity<>(assembler.toResources(repository.findByNomeContaining(nome)), HttpStatus.OK);
     }
 
     @GetMapping("/marca/{marca}")
+    @ApiOperation(value = "retorna um produto conforme a marca")
+    @ApiParam(value = "marca", required = true)
     public ResponseEntity<List<ProdutoResource>> findByMarca(@PathVariable String marca) {
         return new ResponseEntity<>(assembler.toResources(repository.findByMarca(marca)), HttpStatus.OK);
     }
 
     @GetMapping("/data/{data}")
+    @ApiOperation(value = "retorna um produto conforme o data informada", notes = "informar a data no formato aaaa-MM-dd")
+    @ApiParam(value = "data", required = true)
     public ResponseEntity<List<ProdutoResource>> findByDataFabricacao(@PathVariable String data) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(data);
@@ -74,6 +85,8 @@ public class ProdutoRestController {
     }
 
     @PostMapping
+    @ApiOperation(value = "cria um novo produto")
+    @ApiParam(value = "produto", required = true)
     public ResponseEntity<ProdutoResource> create(@RequestBody Produto produto) {
         produto = repository.save(produto);
         if (produto != null) {
@@ -84,7 +97,9 @@ public class ProdutoRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResource> update(@PathVariable Long id, @RequestBody Produto produto) {
+    @ApiOperation(value = "altera um produto")
+    public ResponseEntity<ProdutoResource> update(@ApiParam(value = "id", required = true) @PathVariable Long id, 
+                                                  @ApiParam(value = "produto", required = true) @RequestBody Produto produto) {
         if (produto != null) {
             produto.setProdutoId(id);
             produto = repository.save(produto);
@@ -95,6 +110,8 @@ public class ProdutoRestController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "exclui um produto")
+    @ApiParam(value = "id", required = true)
     public ResponseEntity<ProdutoResource> delete(@PathVariable Long id) {
         Produto produto = repository.findOne(id);
         if (produto != null) {
